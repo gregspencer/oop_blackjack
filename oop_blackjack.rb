@@ -51,18 +51,59 @@ class Deck
 
 end
 
+module Hand
+
+	def show_hand
+		
+	end
+
+	def calc_total
+		
+	end
+
+	def stay
+
+	end
+
+	def hit(new_card)
+		cards << new_card
+  	puts "Dealing card #{new_card} to #{name}"
+	end
+
+end
+
 class Player
-	attr_accessor :name
+	include Hand
+	attr_accessor :name, :cards
 
 	def initialize(name)
 		@name = name
+		@cards = []
 	end
+
 end
 
 class Dealer
+	include Hand
+	attr_accessor :name, :cards
+
+	def initialize
+		@name = "Dealer"
+		@cards = []
+	end
+
 end
 
 deck1 = Deck.new
+player1 = Player.new("Greg")
+dealer = Dealer.new
 
-puts deck1.cards
+player1.hit(deck1.deal_one)
+player1.show_hand
+
+
+
+dealer.hit(deck1.deal_one)
+dealer.show_hand
+
 
