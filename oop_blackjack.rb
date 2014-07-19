@@ -54,11 +54,7 @@ end
 module Hand
 
 	def show_hand
-		
-	end
-
-	def calc_total
-		
+		puts cards
 	end
 
 	def stay
@@ -69,6 +65,26 @@ module Hand
 		cards << new_card
   	puts "Dealing card #{new_card} to #{name}"
 	end
+
+	def calculate_total
+  arr = cards.map{|card| card.value}
+  total = 0
+  arr.each do |value|
+    if value == "Ace"
+      total += 11
+    elsif value.to_i == 0
+      total += 10
+    else
+      total += value.to_i
+    end
+  end
+  arr.select{|n| n == "Ace"}.count.times do
+    if total > 21
+      total -= 10
+    end
+  end
+  total
+end
 
 end
 
@@ -94,16 +110,57 @@ class Dealer
 
 end
 
-deck1 = Deck.new
-player1 = Player.new("Greg")
-dealer = Dealer.new
+class BlackJackEngine
+	attr_accessor :player, :dealer, :deck
 
-player1.hit(deck1.deal_one)
-player1.show_hand
+	def initialize
+		@player = Player.new("Player1")
+		@dealer = Dealer.new
+		@deck = Deck.new
+	end
 
+	def start
+		player.hit(deck.deal_one)
+		dealer.hit(deck.deal_one)
+		player.hit(deck.deal_one)
+		dealer.hit(deck.deal_one)
+		player.show_hand
+		puts player.calculate_total
+		dealer.show_hand
+		puts dealer.calculate_total
+		player_turn
+		dealer_turn
 
+	end
 
-dealer.hit(deck1.deal_one)
-dealer.show_hand
+	def blackjack_or_bust(player_or_dealer)
+		if player_or_dealer.calculate_total == 21
+			if player_or_dealer.is_a?(Player)
+				puts "Congrats you hit blackjack!"
+			elsif player_or_dealer.is_a?(Dealer)
+				puts "Sorry, Dealer hit blackjack.  You lose."
+			end
+		elsif player_or_dealer.calculate_total > 21
+			if player_or_dealer.is_a?(Player)
+				puts "Sorry, you busted."
+			elsif player_or_dealer.is_a?(Dealer)
+				puts "Dealer busted.  You win!"
+			end
+		end
+	end
+	def player_turn
+		blackjack_or_bust(player)
+	end
+
+	def dealer_turn
+		blackjack_or_bust(dealer)
+	end
+
+	#player_turn
+	#dealer_turn
+	#show_winner
+end
+game = BlackJackEngine.new
+game.start
 
 
