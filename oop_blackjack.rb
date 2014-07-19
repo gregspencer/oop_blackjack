@@ -130,6 +130,7 @@ class BlackJackEngine
 		puts dealer.calculate_total
 		player_turn
 		dealer_turn
+		show_winner
 
 	end
 
@@ -148,12 +149,38 @@ class BlackJackEngine
 			end
 		end
 	end
+
 	def player_turn
 		blackjack_or_bust(player)
+		while player.calculate_total < 21
+			puts "(1) Hit? or (2) Stay?"
+			hit_or_stay = gets.chomp
+			if hit_or_stay == "2"
+				puts "You chose to stay."
+				puts "Your total is #{player.calculate_total}"
+				break
+			elsif hit_or_stay == "1"
+				player.hit(deck.deal_one)
+				blackjack_or_bust(player)
+			end
+		end
 	end
 
 	def dealer_turn
 		blackjack_or_bust(dealer)
+		while dealer.calculate_total < 17
+			dealer.hit(deck.deal_one)
+			blackjack_or_bust(dealer)
+		end
+	end
+
+	def show_winner
+		if player.calculate_total > dealer.calculate_total
+			puts "You win!! You have #{player.calculate_total}"
+			puts "Dealer has #{dealer.calculate_total}"
+		else puts "You lose. You have #{player.calculate_total}"
+			puts "Dealer has #{dealer.calculate_total}"
+		end
 	end
 
 	#player_turn
