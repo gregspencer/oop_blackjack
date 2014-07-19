@@ -124,14 +124,15 @@ class BlackJackEngine
 		dealer.hit(deck.deal_one)
 		player.hit(deck.deal_one)
 		dealer.hit(deck.deal_one)
-		player.show_hand
-		puts player.calculate_total
-		dealer.show_hand
-		puts dealer.calculate_total
+		blackjack_or_bust(player)
+		blackjack_or_bust(dealer)
+		#player.show_hand
+		puts "Player has #{player.calculate_total}"
+		#dealer.show_hand
+		puts "Dealer has #{dealer.calculate_total}"
 		player_turn
 		dealer_turn
 		show_winner
-
 	end
 
 	def blackjack_or_bust(player_or_dealer)
@@ -141,12 +142,14 @@ class BlackJackEngine
 			elsif player_or_dealer.is_a?(Dealer)
 				puts "Sorry, Dealer hit blackjack.  You lose."
 			end
+			exit
 		elsif player_or_dealer.calculate_total > 21
 			if player_or_dealer.is_a?(Player)
-				puts "Sorry, you busted."
+				puts "Sorry, you busted.  Dealer wins"
 			elsif player_or_dealer.is_a?(Dealer)
 				puts "Dealer busted.  You win!"
 			end
+			exit
 		end
 	end
 
@@ -162,6 +165,8 @@ class BlackJackEngine
 			elsif hit_or_stay == "1"
 				player.hit(deck.deal_one)
 				blackjack_or_bust(player)
+				puts "Your total is #{player.calculate_total}"
+				puts "Dealer has #{dealer.calculate_total}"
 			end
 		end
 	end
@@ -178,15 +183,14 @@ class BlackJackEngine
 		if player.calculate_total > dealer.calculate_total
 			puts "You win!! You have #{player.calculate_total}"
 			puts "Dealer has #{dealer.calculate_total}"
+		elsif player.calculate_total == dealer.calculate_total
+			puts "Dealer wins tie.  You lose."
 		else puts "You lose. You have #{player.calculate_total}"
 			puts "Dealer has #{dealer.calculate_total}"
 		end
 	end
-
-	#player_turn
-	#dealer_turn
-	#show_winner
 end
+
 game = BlackJackEngine.new
 game.start
 
