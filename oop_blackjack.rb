@@ -57,13 +57,13 @@ module Hand
 		puts cards
 	end
 
-	def stay
-
-	end
-
 	def hit(new_card)
 		cards << new_card
   	puts "Dealing card #{new_card} to #{name}"
+	end
+
+	def flop(new_card)
+		cards << new_card
 	end
 
 	def calculate_total
@@ -121,15 +121,12 @@ class BlackJackEngine
 
 	def start
 		player.hit(deck.deal_one)
-		dealer.hit(deck.deal_one)
+		dealer.flop(deck.deal_one)
 		player.hit(deck.deal_one)
-		dealer.hit(deck.deal_one)
 		blackjack_or_bust(player)
+		dealer.hit(deck.deal_one)
 		blackjack_or_bust(dealer)
-		#player.show_hand
 		puts "Player has #{player.calculate_total}"
-		#dealer.show_hand
-		puts "Dealer has #{dealer.calculate_total}"
 		player_turn
 		dealer_turn
 		show_winner
@@ -158,7 +155,9 @@ class BlackJackEngine
 		while player.calculate_total < 21
 			puts "(1) Hit? or (2) Stay?"
 			hit_or_stay = gets.chomp
-			if hit_or_stay == "2"
+			if !["1","2"].include?(hit_or_stay)
+				puts "Error: you must enter a 1 or 2"
+			elsif hit_or_stay == "2"
 				puts "You chose to stay."
 				puts "Your total is #{player.calculate_total}"
 				break
@@ -166,7 +165,6 @@ class BlackJackEngine
 				player.hit(deck.deal_one)
 				blackjack_or_bust(player)
 				puts "Your total is #{player.calculate_total}"
-				puts "Dealer has #{dealer.calculate_total}"
 			end
 		end
 	end
